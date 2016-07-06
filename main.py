@@ -9,7 +9,6 @@ app.debug = True
 # Called a decorator.
 @app.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def index():
-    get_json_sys()
     return render_template("index.html")
 
 

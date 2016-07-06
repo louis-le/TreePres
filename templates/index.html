@@ -12,24 +12,16 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
     </head>
     <body>
-        <p>
-            <button id="destroy">Destroy</button> <button id="init">Init</button>
-            <button id="expand">Expand</button>
-            <button id="reload">Reload</button>
-            <button id="setSource">Set source option</button>
-        </p>
-        <div ng-controller="FileLocation">
-            <h1>{{title}}</h1>
-            Search: <input type="text" name="location" />
-        </div>
-        <br />
-        Ajax (JSON)
+        <p>Ajax (JSON)</p>
         <div id="tree1" data-source="ajax" class="sampletree"></div><br />
 
-        <script>
-            function TestCtrl($scope) {
-                $scope.title = 'Write a title here...';
-            };
-        </script>
+        <p>
+            <button id="download" disabled>Download</button> <-- Not Functional Yet. In Working Progress...
+        </p>
+        <!--<script>-->
+            <!--function TestCtrl($scope) {-->
+                <!--$scope.title = 'Write a title here...';-->
+            <!--};-->
+        <!--</script>-->
     </body>
 </html>
