@@ -9,6 +9,7 @@ app.debug = True
 # Called a decorator.
 @app.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def index():
+    get_json_sys()
     return render_template("index.html")
 
 
@@ -32,4 +33,4 @@ def get_json_sys():
 
 # Start this app. Only runs app if this file is called directly.
 if __name__ == "__main__":
-    app.run(host="d7c679.na.sas.com")
+    app.run(host="louisle-VirtualBox.na.sas.com")

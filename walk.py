@@ -4,41 +4,39 @@ from os import walk, path
 
 def file_to_dict(fpath):
     return {
-        'name': path.basename(fpath),
+        'title': path.basename(fpath),
         'type': 'file',
         'path': fpath,
-        'tag': 'org',
     }
 
 
 def folder_to_dict(rootpath):
     return {
-        'name': path.basename(rootpath),
-        'type': 'folder',
+        'title': path.basename(rootpath),
+        'folder': 'true',
         'path': rootpath,
-        'tag': 'org',
         'children': [],
     }
 
 
 def tree_to_dict(rootpath):
     root_dict = folder_to_dict(rootpath)
-    root, folders, files = next(walk(rootpath))
+    root, folders, files = walk(rootpath).next()
     root_dict['children'] = [file_to_dict(path.sep.join([root, fpath])) for fpath in files]
     root_dict['children'] += [tree_to_dict(path.sep.join([root, folder])) for folder in folders]
     return root_dict
 
 
 def tree_to_json(rootdir, pretty_print=True):
-    root, folders, files = next(walk(rootdir))
+    root, folders, files = walk(rootdir).next()
     root_dict = [tree_to_dict(path.sep.join([root, folder])) for folder in folders]
     root_dict += [file_to_dict(path.sep.join([root, fpath])) for fpath in files]
     if pretty_print:
-        js = json.dumps(root_dict, indent=4, encoding='utf-8')
+        js = json.dumps(root_dict)
     else:
-        js = json.dumps(root_dict, encoding='utf-8')
+        js = json.dumps(root_dict)
     return js
 
 
 def return_rest():
-    return tree_to_json('c:\\Users\\louisle\\Documents')
+    return tree_to_json('/home/louisle/Desktop')

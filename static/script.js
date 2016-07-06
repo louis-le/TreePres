@@ -2,7 +2,7 @@ $(function(){
     // Create the tree inside the <div id="tree"> element.
     $("#tree1").fancytree({
         source: {
-            url: "/JSON/ajax-tree-plain.json"
+            url: "/walk/"
         },
         checkbox: true,
     });
