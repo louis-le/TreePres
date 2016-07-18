@@ -1,0 +1,30 @@
+/* Fancytree extension 'table' */
+table.fancytree-ext-table {
+  width: 100%;
+}
+table.fancytree-ext-table tbody tr:nth-child(even){
+  background-color: #f4f4f8;
+}
+table.fancytree-ext-table tbody tr td {
+  border: 1px solid lightgray;
+}
+
+/* Fancytree extension 'columnview' */
+table.fancytree-ext-columnview {
+  border-collapse: collapse;
+  width: 100%;
+}
+table.fancytree-ext-columnview tbody tr[0] {
+  height: 200px;
+}
+
+#portes {
+  height: auto;
+  width: auto;
+  max-width: 300px;
+  max-height: 300px;
+}
+
+p {
+  line-height: 110%;
+}

@@ -6,7 +6,7 @@ def file_to_dict(fpath):
     return {
         'title': path.basename(fpath),
         'type': 'file',
-        'path': fpath,
+        'key': fpath,
     }
 
 
@@ -14,7 +14,7 @@ def folder_to_dict(rootpath):
     return {
         'title': path.basename(rootpath),
         'folder': 'true',
-        'path': rootpath,
+        'key': rootpath,
         'children': [],
     }
 
@@ -39,4 +39,4 @@ def tree_to_json(rootdir, pretty_print=True):
 
 
 def return_rest():
-    return tree_to_json('/home/louisle/Desktop')
+    return tree_to_json('/home/louis/Desktop/Tree')
