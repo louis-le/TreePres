@@ -21,10 +21,6 @@ table.fancytree-ext-columnview tbody tr[0] {
 #portes {
   height: auto;
   width: auto;
-  max-width: 300px;
-  max-height: 300px;
-}
-
-p {
-  line-height: 110%;
+  max-width: 250px;
+  max-height: 250px;
 }

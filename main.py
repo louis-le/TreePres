@@ -1,10 +1,13 @@
-from flask import Flask, render_template, send_from_directory, request, send_file, redirect, url_for
+from flask import Flask, render_template, send_from_directory, request, send_file, redirect, url_for, jsonify, g
 from werkzeug.utils import secure_filename
-import walk, zipfile, download, os
 from time import localtime, strftime
+import walk, zipfile, download, os, sqlite3
 # Helps Flask determine root path.
+
+
+DATABASE = 'database.db'
+
 app = Flask(__name__)
-UPLOAD_FOLDER = '/FDA_Hold'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.debug = True
@@ -95,12 +98,28 @@ def upload_file():
     # </form>
     # '''
 
-from flask import send_from_directory
-
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     return redirect(url_for('index'))
+
+@app.route("/get_my_ip", methods=["GET"])
+def get_my_ip():
+    return jsonify({'ip': request.remote_addr}), 200
+
+
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 # Start this app. Only runs app if this file is called directly.
 if __name__ == "__main__":

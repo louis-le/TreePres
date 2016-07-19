@@ -11,33 +11,38 @@
         <script src="/static/jquery.fancytree/jquery.fancytree.filter.js" type="text/javascript"></script>
         <script src="/static/jquery.fancytree/jquery.fancytree.persist.js" type="text/javascript"></script>
         <script src="/static/jquery.fancytree/jquery.fancytree.table.js" type="text/javascript"></script>
-        <script src="/static/jquery.fancytree/jquery.fancytree.themeroller.js" type="text/javascript"></script>
+        <script src="/static/jquery.fancytree/jquery.fancytree.wide.js" type="text/javascript"></script>
+
         <!-- Initialize the tree when page is loaded -->
         <script src = "/static/script.js" type="text/javascript"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/static/style.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
     </head>
     <body>
-
         <img src = "/static/Portes2.PNG" id = 'portes'/><br /><br />
         <div class = "row">
             <a href = "{{ url_for('index') }}"><button id="refresh">Refresh</button></a>
             <button type="button" id="collapse">Collapse All</button>
             <button id="toggle">Toggle Expansion</button>
+            <div id = "myChoices">
+                <select id="viewChoices">
+                   <option value="A">Normal View</option>
+                   <option value="B">Table View</option>
+                </select>
+            </div>
         </div><br />
 
-        <div id = "myChoices">
-            <select id="viewChoices">
-               <option value="A">Normal View</option>
-               <option value="B">Table View</option>
-            </select>
-        </div>
+
+
+        <input name="search" placeholder="Filter..." autocomplete="off">
+        <button id="btnResetSearch">&times;</button>
+
+        <br />
         <div id = "myTrees">
-            <div id="A">
+            <div id="A" class = "trees">
                 <div id="tree" data-source="ajax" ></div>
             </div>
-            <div id="B" style="display: none;">
+            <div id="B" class = "trees">
                 <table id="treetable">
                     <colgroup>
                         <col width="*"></col>
@@ -64,16 +69,21 @@
         <br />
         <!-- <div>Selected nodes: <span id="echoSelection">-</span></div> -->
         <input type="hidden" id="echoActivePath">
-        <div><u>Active node</u>: <span id="echoActive">-</span></div>
-        <div><u>Selected root paths</u>: <span name="echoSelectionRootKeys" id="echoSelectionRootKeys">-</span></div>
+
+        <input type = "hidden" name="echoSelectionRootKeys" id="echoSelectionRootKeys">
+        <!-- <div><u>Selected root paths</u>: <span name="echoSelectionRootKeys" id="echoSelectionRootKeys">-</span></div> -->
+        <div><u>Uploading to</u>: <span id="echoActive">-</span></div>
         <div><u>Selected folders and files</u>: <span name="echoSelection" id="echoSelection">-</span></div>
-        <br />
+        <br/>
         <form action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
-                <input type=file name=file>
-                <input type="hidden" id="active" name="active">
-                <input type=submit value=Upload>
+
+            <input type=file name=file>
+            <input type="hidden" id="active" name="active">
+            <input type=submit value=Upload>
         </form>
+        <br />
         <form method="post" action="{{ url_for('download') }}" name="form">
+
             <input type="hidden" id="paths" name = "paths"><br>
             <input type="submit" value="Download">
         </form>
