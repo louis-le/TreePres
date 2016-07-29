@@ -1,10 +1,11 @@
 from flask import Flask, render_template, send_from_directory, request, send_file, redirect, url_for, jsonify, g
 from werkzeug.utils import secure_filename
 from time import localtime, strftime
-import walk, zipfile, download, os, sqlite3
+from io import BytesIO
+import walk, zipfile, os, sqlite3
 # Helps Flask determine root path.
 
-
+UPLOAD_FOLDER = './'
 DATABASE = 'database.db'
 
 app = Flask(__name__)
@@ -12,13 +13,11 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.debug = True
 
-
-
-
 # Home page of website.
 # Called a decorator.
 @app.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def index():
+    cur = get_db().cursor()
     return render_template("index.html")
 
 
@@ -47,24 +46,24 @@ def get_json_sys():
 
 @app.route('/download/', methods=['POST'])
 def download():
-    # Problem happens here
-    # return (request.form['paths'])
-    zipf = zipfile.ZipFile('Python.zip', 'w', zipfile.ZIP_DEFLATED)
-    p = request.form['paths']
-    paths = p.split(", ")
-    for path in paths:
-        entered = False
+    memory_file = BytesIO()
+    with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        files = request.form['paths']
+        p = request.form['paths']
+        paths = p.split(", ")
+        for path in paths:
+            entered = False
 
-        for root, dirs, files in os.walk(path):
-            entered = True
-            for file in files:
-                zipf.write(os.path.join(root, file))
+            for root, dirs, files in os.walk(path):
+                entered = True
+                for file in files:
+                    zipf.write(os.path.join(root, file))
 
-        if not entered:
-            zipf.write(path)
-    zipf.close()
-
-    return send_file('/home/louis/Desktop/Tree/Python.zip', attachment_filename='Download-[' + strftime("%d %b %Y %H:%M:%S", localtime()) + '].zip', as_attachment=True)
+            if not entered:
+                zipf.write(path)
+        zipf.close()
+    memory_file.seek(0)
+    return send_file(memory_file, attachment_filename='Download-[' + strftime("%d %b %Y %H:%M:%S", localtime()) + '].zip', as_attachment=True)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -88,15 +87,6 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return redirect(url_for('uploaded_file',filename=filename))
-    # return '''
-    # <!doctype html>
-    # <title>Upload new File</title>
-    # <h1>Upload new File</h1>
-    # <form action="url_for(upload_file)" method=post enctype=multipart/form-data>
-    #   <p><input type=file name=file>
-    #      <input type=submit value=Upload>
-    # </form>
-    # '''
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -106,8 +96,6 @@ def uploaded_file(filename):
 @app.route("/get_my_ip", methods=["GET"])
 def get_my_ip():
     return jsonify({'ip': request.remote_addr}), 200
-
-
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -123,4 +111,4 @@ def close_connection(exception):
 
 # Start this app. Only runs app if this file is called directly.
 if __name__ == "__main__":
-    app.run(host="louis-VirtualBox.na.sas.com")
+    app.run(host="louis-VirtualBox.na.sas.com", port = 4768)

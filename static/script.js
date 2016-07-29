@@ -36,6 +36,11 @@ $(function(){
             $("#echoActive").text(data.node.title);
             $('#echoActivePath').text(data.node.key);
             document.getElementById('active').value = $("#echoActivePath").text();
+            if(data.node.folder && document.getElementById("browse_button").files.length !== 0) {
+                 document.getElementById("upload_button").disabled = false;
+            } else {
+                document.getElementById("upload_button").disabled = true;
+            }
         },
         init: function(event, data, flag) {
             var node = $("#tree").fancytree("getRootNode");
@@ -56,6 +61,12 @@ $(function(){
             });
             $("#echoSelectionRootKeys").text(selRootKeys.join(", "));
             document.getElementById('paths').value = $("#echoSelectionRootKeys").text();
+
+            if($("#echoSelection").text() === "") {
+                document.getElementById("download_button").disabled = true;
+            } else {
+                document.getElementById("download_button").disabled = false;
+            }
         },
         click: function(event, data) {
             var node = data.node,
@@ -94,6 +105,12 @@ $(function(){
             $("#echoActive").text(data.node.title);
             $('#echoActivePath').text(data.node.key);
             document.getElementById('active').value = $("#echoActivePath").text();
+            if(data.node.folder && document.getElementById("browse_button").files.length !== 0) {
+                 document.getElementById("upload_button").disabled = false;
+            } else {
+                document.getElementById("upload_button").disabled = true;
+            }
+
         },
         init: function(event, data, flag) {
             var node = $("#tree").fancytree("getRootNode");
@@ -114,6 +131,13 @@ $(function(){
             });
             $("#echoSelectionRootKeys").text(selRootKeys.join(", "));
             document.getElementById('paths').value = $("#echoSelectionRootKeys").text();
+
+            if($("#echoSelection").text() === "") {
+                document.getElementById("download_button").disabled = true;
+            } else {
+                document.getElementById("download_button").disabled = false;
+            }
+
         },
         click: function(event, data) {
             var node = data.node,
@@ -146,10 +170,12 @@ $(function(){
         node.sortChildren(null, true);
     });
 
-    $("button#collapse").click(function(event){
+    $("button#reset").click(function(event){
         tree.fancytree("getRootNode").visit(function(node){
             node.setExpanded(false);
+            node.setSelected(false);
         });
+        data.node.setActive();
     });
 
     $("button#toggle").click(function(event){
@@ -158,30 +184,21 @@ $(function(){
         });
     });
 
+    $("input:file").change(function() {
+        if(data.node.folder && document.getElementById("browse_button").files.length !== 0) {
+             document.getElementById("upload_button").disabled = false;
+        } else {
+            document.getElementById("upload_button").disabled = true;
+        }
+    });
+
     $('document').ready(function() {
         // Hidding and showing specific tree.
         $('.trees').hide();
         $('#'+$('#viewChoices').val()).show();
 
-        // Active node running
-        $("#echoActive").text(data.node.title);
-        $('#echoActivePath').text(data.node.key);
-        document.getElementById('active').value = $("#echoActivePath").text();
-
-        // Select code running
-        var selKeys = $.map(data.tree.getSelectedNodes(true), function(node){
-            return node.title;
-        });
-        $("#echoSelection").text(selKeys.join(", "));
-
-        // Get a list of all selected TOP nodes
-        var selRootNodes = data.tree.getSelectedNodes(true);
-        // ... and convert to a key array:
-        var selRootKeys = $.map(selRootNodes, function(node){
-            return node.key;
-        });
-        $("#echoSelectionRootKeys").text(selRootKeys.join(", "));
-        document.getElementById('paths').value = $("#echoSelectionRootKeys").text();
+        document.getElementById("upload_button").disabled = true;
+        document.getElementById("download_button").disabled = true;
     });
 
     $('#viewChoices').change(function () {

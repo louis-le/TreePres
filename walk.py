@@ -39,4 +39,4 @@ def tree_to_json(rootdir, pretty_print=True):
 
 
 def return_rest():
-    return tree_to_json('/home/louis/Desktop/Tree')
+    return tree_to_json('./')
