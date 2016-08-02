@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html ng-app = "myApp">
+<html>
     <head>
         <!-- Include jQuery and jQuery UI -->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script src="/static/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
         <!-- Include Fancytree skin and library -->
@@ -15,71 +17,97 @@
 
         <!-- Initialize the tree when page is loaded -->
         <script src = "/static/script.js" type="text/javascript"></script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
         <link rel="stylesheet" type="text/css" href="/static/style.css">
     </head>
     <body>
-        <p><strong>Tree Directory</strong></p>
-        <div class = "row">
-            <a href = "{{ url_for('index') }}"><button id="refresh">Refresh</button></a>
-            <button type="button" id="reset">Reset</button>
-            <button id="toggle">Toggle Expansion</button>
-            <select id="viewChoices">
+         <nav class="navbar navbar-default">
+            <div class = "container-fluid">
+                <h2>Tree Directory</h2>
+            </div>
+        </nav>
+        <div class = "container-fluid">
+            <button id="refresh" class="btn btn-secondary btn-sm" onClick="window.location.reload()">Refresh</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="reset">Reset</button>
+            <button id="toggle" class="btn btn-secondary btn-sm">Toggle Expansion</button>
+            <select id="viewChoices" class="btn btn-secondary btn-sm">
                <option value="A">Normal View</option>
                <option value="B">Table View</option>
             </select>
-        </div><br />
-
-        <br />
-        <div id = "myTrees">
-            <div id="A" class = "trees">
-                <input name="search" placeholder="Filter..." autocomplete="off">
-                <button id="btnResetSearch">&times;</button>
-                <div id="tree" data-source="ajax" ></div>
+            <br /><br />
+            <div id = "myTrees">
+                <div id="A" class = "trees">
+                    <input name="search" placeholder="Filter..." autocomplete="off">
+                    <button id="btnResetSearch">&times;</button><br /><br />
+                    <div id="tree" data-source="ajax" ></div>
+                </div>
+                <div id="B" class = "trees">
+                    <table id="treetable">
+                        <colgroup>
+                            <col width="*"></col>
+                            <col width="*"></col>
+                            <col width="100px"></col>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                            <th></th>
+                            <th>Path</th>
+                            <th>Folder</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div id="B" class = "trees">
-                <table id="treetable">
-                    <colgroup>
-                        <col width="*"></col>
-                        <col width="*"></col>
-                        <col width="100px"></col>
-                    </colgroup>
-                    <thead>
-                        <tr>
-                        <th></th>
-                        <th>Key</th>
-                        <th>Folder</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <br />
+            <!-- <div>Selected nodes: <span id="echoSelection">-</span></div> -->
+            <input type="hidden" id="echoActivePath">
+            <input type = "hidden" name="echoSelectionRootKeys" id="echoSelectionRootKeys">
+            <!-- <div><u>Selected root paths</u>: <span name="echoSelectionRootKeys" id="echoSelectionRootKeys">-</span></div> -->
+            <div class = "row">
+                <div class = "col-sm-6" >
+                {# style="padding-right:20px; border-right: 1px solid #ccc;" #}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div><u>Selected folders and files</u>: <span name="echoSelection" id="echoSelection">-</span></div>
+                            <br /><br /><br />
+                        </div>
+                        <div class="panel-body">
+                            <form method="post" action="{{ url_for('download') }}" name="form">
+                            <input type="hidden" id="paths" name = "paths">
+                                <input type="submit" class="btn btn-secondary btn-sm" value="Download" id="download_button">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class = "col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div><u>Uploading to</u>: <span id="echoActive">-</span></div><br />
+                            <u>File(s)</u>: <span id="upload-file-info">-</span><br /><br />
+                        </div>
+                        <div class="panel-body">
+                            <form action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
+                                <div class = "container-fluid">
+
+                                    <label class="btn btn-secondary btn-sm" for="browse_button">
+                                        <input name="file" id="browse_button" type="file" style="display:none;" onchange="$('#upload-file-info').html($(this).val());" multiple>
+                                        Browse
+                                    </label>&nbsp;
+                                    <input type="hidden" id="active" name="active">
+                                    <input type=submit class="btn btn-secondary btn-sm" value=Upload id="upload_button">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <br />
-        <!-- <div>Selected nodes: <span id="echoSelection">-</span></div> -->
-        <input type="hidden" id="echoActivePath">
-
-        <input type = "hidden" name="echoSelectionRootKeys" id="echoSelectionRootKeys">
-        <!-- <div><u>Selected root paths</u>: <span name="echoSelectionRootKeys" id="echoSelectionRootKeys">-</span></div> -->
-        <div><u>Uploading to</u>: <span id="echoActive">-</span></div>
-        <div><u>Selected folders and files</u>: <span name="echoSelection" id="echoSelection">-</span></div>
-        <br/>
-        <form action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
-            <input type=file name=file id="browse_button">
-            <input type="hidden" id="active" name="active">
-            <input type=submit value=Upload id="upload_button">
-        </form>
-        <br />
-        <form method="post" action="{{ url_for('download') }}" name="form">
-
-            <input type="hidden" id="paths" name = "paths"><br>
-            <input type="submit" value="Download" id="download_button">
-        </form>
     </body>
 </html>

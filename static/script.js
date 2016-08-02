@@ -1,6 +1,8 @@
 $(function(){
     // Create the tree inside the <div id="tree"> element.
+
     $("#tree").fancytree({
+
         extensions: ["persist", "wide", "filter"],
         source: {
             url: "/walk/"
@@ -75,7 +77,6 @@ $(function(){
                 node.toggleExpanded();
             }
         },
-
     });
 
     $("#treetable").fancytree({
@@ -185,7 +186,7 @@ $(function(){
     });
 
     $("input:file").change(function() {
-        if(data.node.folder && document.getElementById("browse_button").files.length !== 0) {
+        if($(this).val()) {
              document.getElementById("upload_button").disabled = false;
         } else {
             document.getElementById("upload_button").disabled = true;
@@ -236,11 +237,27 @@ $(function(){
         $("span#matches").text("");
         tree.fancytree("getTree").clearFilter();
     }).attr("disabled", true);
-
-
-    //
-    // $('#viewChoices').change(function () {
-    //     $('#myTrees > div').hide();
-    //     $('#myTrees').find('#' + $(this).val()).show();
-    // });
 });
+
+var selDiv = "";
+
+document.addEventListener("DOMContentLoaded", init, false);
+
+function init() {
+    document.querySelector('#browse_button').addEventListener('change', handleFileSelect, false);
+    selDiv = document.querySelector("#upload-file-info");
+}
+
+function handleFileSelect(e) {
+
+    if(!e.target.files) return;
+
+    selDiv.innerHTML = "";
+
+    var files = e.target.files;
+    for(var i=0; i<files.length; i++) {
+        var f = files[i];
+        selDiv.innerHTML += f.name + "<br/>";
+    }
+
+}

@@ -1,0 +1,20 @@
+<table border = "1">
+	<tr>
+		<th><strong>User Hostname:</strong>&nbsp;</th>
+		<th><strong>Last Name:</strong>&nbsp;</th>
+		<th><strong>First Name:</strong>&nbsp;</th>
+		<th><strong>Group Name:</strong>&nbsp;</th>
+		<th><strong>Download Paths:</strong>&nbsp;</th>
+		<th><strong>Download Time:</strong>&nbsp;</th>
+	</tr>
+	{% for user in users %}
+		<tr>
+			<td>{{ user[0] }}</td>
+			<td>{{ user[1] }}</td>
+			<td>{{ user[2]  }}</td>
+			<td>{{ user[3]  }}</td>
+			<td>{{ user[4]  }}</td>
+			<td>{{ user[5]  }}</td>
+		</tr>
+	{% endfor %}
+</table>
